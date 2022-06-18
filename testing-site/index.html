@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .rank {
+            width: 350px;
+            background: rgb(0, 119, 255);
+            color: white;
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        body {
+            text-align: center;
+        }
+        #input {
+            width: 250px;
+        }
+        #ranks {
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test out ApolloVibeSearch cloud function!</h1>
+    <form method="GET">
+        <input id="input" name="input" type="text" value="${old_input}"/>
+        <input id="ui" type="hidden" name="ui" value="true"> 
+        <input type="submit"/>
+    </form>
+    <div id="ranks">
+    ${ranks_html}
+    </div>
+</body>
+</html>
