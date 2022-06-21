@@ -11,7 +11,27 @@ const wordsRef = db.collection('words');
 
 exports.search = functions.https.onRequest(async (req, res) => {
     // Grab the input parameter.
-    const input = req.query.input;
+    const input = req.query.input
+
+    const ranks = await process(input)
+
+    if (req.query.ui) {
+        ui_show(res, ranks, req)
+    } else {
+        // Send back a message that we've successfully written the message
+    res.json({result: ranks});
+    }
+});
+
+exports.iosSearch = functions.https.onCall(async (data, context) => {
+    const input = data.input;
+
+    const ranks = await process(input);
+
+    return {result : ranks}
+});
+
+async function process(input) {
     // Tokenize
     const tokens = tokenize(input);
 
@@ -20,8 +40,7 @@ exports.search = functions.https.onRequest(async (req, res) => {
     // Returns error if snapshot is empty aka no words
     // in database match any in query
     if (snapshot.empty) {
-        res.json({error: 'No words in database matching any word in query.'});
-        return;
+        throw new functions.https.HttpsError('aborted','No words in database matching any word in query.');
     }  
 
     // Add up cumulitive query similarity
@@ -37,13 +56,8 @@ exports.search = functions.https.onRequest(async (req, res) => {
         return 0;
     });
 
-    if (req.query.ui) {
-        ui_show(res, ranks, req)
-    } else {
-        // Send back a message that we've successfully written the message
-    res.json({result: ranks});
-    }
-});
+    return ranks;
+}
 
 // Tokenizer
 function tokenize(input) {
